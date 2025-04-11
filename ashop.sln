@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.API", "src\Catalog.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks", "src\BuildingBlocks\BuildingBlocks.csproj", "{651AA1D2-132B-4A4F-A437-58BBA074C255}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B07E07CE-B11E-48F7-BC93-730506176B06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A26B4CD5-7D9F-4F74-953F-0193ADEE72A1} = {B07E07CE-B11E-48F7-BC93-730506176B06}
 		{651AA1D2-132B-4A4F-A437-58BBA074C255} = {B07E07CE-B11E-48F7-BC93-730506176B06}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{38543BD3-D6C0-4C63-A345-23A2C37490AC} = {B07E07CE-B11E-48F7-BC93-730506176B06}
+		{F86F78D7-9468-4E80-A12D-222E1D12350B} = {B07E07CE-B11E-48F7-BC93-730506176B06}
 	EndGlobalSection
 EndGlobal
