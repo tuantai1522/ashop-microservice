@@ -1,3 +1,4 @@
+using BuildingBlocks.CQRS;
 using Carter;
 using Catalog.API.Contracts;
 using Catalog.API.Entities;
@@ -9,7 +10,7 @@ namespace Catalog.API.Features;
 
 public static class CreateProduct
 {
-    public class Command : IRequest<Guid>
+    public class Command : ICommand<Guid>
     {
         public string Name { get; set; } = null!;
         
@@ -22,7 +23,7 @@ public static class CreateProduct
         public List<string> Category { get; set; } = [];
     }
     
-    public class Handler(IDocumentSession session) : IRequestHandler<Command, Guid>
+    public class Handler(IDocumentSession session) : ICommandHandler<Command, Guid>
     {
         private readonly IDocumentSession _session = session;
 
