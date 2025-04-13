@@ -1,5 +1,5 @@
 using BuildingBlocks.CQRS;
-using BuildingBlocks.Result;
+using BuildingBlocks.Validation;
 using Carter;
 using Catalog.API.Contracts;
 using Catalog.API.Entities;

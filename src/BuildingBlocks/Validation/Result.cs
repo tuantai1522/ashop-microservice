@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace BuildingBlocks.Result;
+namespace BuildingBlocks.Validation;
 
 public class Result
 {

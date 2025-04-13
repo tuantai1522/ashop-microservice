@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-namespace BuildingBlocks.Result;
+namespace BuildingBlocks.Validation;
 
 public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
 {
@@ -15,7 +15,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         {
             await _next(context);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             _logger.LogError(ex, "Exception occured: {Message}", ex.Message);
             
@@ -45,6 +45,13 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
     {
         return ex switch
         {
+            ValidationException validationException => new ExceptionDetails(
+                StatusCodes.Status400BadRequest,
+                "ValidationFailure",
+                "Validation Error",
+                ex.Message,
+                validationException.Errors
+            ),
             _ => new ExceptionDetails(
                 StatusCodes.Status500InternalServerError,
                 "Internal Server Error",

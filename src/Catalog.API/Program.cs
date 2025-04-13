@@ -1,6 +1,8 @@
-using BuildingBlocks.Result;
+using BuildingBlocks.Behaviour;
+using BuildingBlocks.Validation;
 using Carter;
 using Catalog.API.Data;
+using FluentValidation;
 using Marten;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,12 +11,16 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddSwaggerGen();
 
+var assembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssembly(typeof(Program).Assembly);
+    config.RegisterServicesFromAssembly(assembly);
+    config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
 });
 
 builder.Services.AddCarter();
+
+builder.Services.AddValidatorsFromAssemblies([assembly]);
 
 builder.Services.AddMarten(opts =>
 {

@@ -1,9 +1,10 @@
 using BuildingBlocks.CQRS;
-using BuildingBlocks.Result;
+using BuildingBlocks.Validation;
 using Carter;
 using Catalog.API.Contracts;
 using Catalog.API.Entities;
-using Catalog.API.Exceptions;
+using Catalog.API.Errors;
+using FluentValidation;
 using Marten;
 using MediatR;
 
@@ -12,6 +13,16 @@ namespace Catalog.API.Features;
 public static class GetProductById
 {
     public record Query(Guid Id) : IQuery<Result<ProductDto>>;
+    
+    public sealed class Validator : AbstractValidator<Query>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .WithMessage("Product ID is required.");
+        }
+    }
 
     internal class Handler(IDocumentSession session) : IQueryHandler<Query, Result<ProductDto>>
     {

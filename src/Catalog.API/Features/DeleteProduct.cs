@@ -1,8 +1,9 @@
 using BuildingBlocks.CQRS;
-using BuildingBlocks.Result;
+using BuildingBlocks.Validation;
 using Carter;
 using Catalog.API.Entities;
-using Catalog.API.Exceptions;
+using Catalog.API.Errors;
+using FluentValidation;
 using Marten;
 using MediatR;
 
@@ -13,6 +14,16 @@ public static class DeleteProduct
     public record Command : ICommand<Result<Guid>>
     {
         public Guid Id { get; set; }
+    }
+    
+    public sealed class Validator : AbstractValidator<Command>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .WithMessage("Product ID is required.");
+        }
     }
     
     internal class Handler(IDocumentSession session) : ICommandHandler<Command, Result<Guid>>

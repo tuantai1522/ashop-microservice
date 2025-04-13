@@ -1,8 +1,9 @@
 using BuildingBlocks.CQRS;
-using BuildingBlocks.Result;
+using BuildingBlocks.Validation;
 using Carter;
 using Catalog.API.Contracts;
 using Catalog.API.Entities;
+using FluentValidation;
 using Marten;
 using Marten.Pagination;
 using MediatR;
@@ -12,6 +13,16 @@ namespace Catalog.API.Features;
 public static class GetProductsByCategory
 {
     public record Query(string CategoryName, int? PageNumber = 1, int? PageSize = 10) : IQuery<Result<IReadOnlyList<ProductDto>>>;
+    
+    public sealed class Validator : AbstractValidator<Query>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.CategoryName)
+                .NotEmpty()
+                .WithMessage("Product Category Name is required.");
+        }
+    }
 
     internal class Handler(IDocumentSession session) : IQueryHandler<Query, Result<IReadOnlyList<ProductDto>>>
     {

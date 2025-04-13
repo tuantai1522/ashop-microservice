@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace BuildingBlocks.Result;
+namespace BuildingBlocks.Validation;
 
 public static class ResultExtensions
 {

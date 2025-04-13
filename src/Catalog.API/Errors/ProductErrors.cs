@@ -1,6 +1,6 @@
-using BuildingBlocks.Result;
+using BuildingBlocks.Validation;
 
-namespace Catalog.API.Exceptions;
+namespace Catalog.API.Errors;
 
 public static class ProductErrors
 {

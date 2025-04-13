@@ -1,4 +1,4 @@
-namespace BuildingBlocks.Result;
+namespace BuildingBlocks.Validation;
 
 public record Error
 {

@@ -1,9 +1,10 @@
 using BuildingBlocks.CQRS;
-using BuildingBlocks.Result;
+using BuildingBlocks.Validation;
 using Carter;
 using Catalog.API.Contracts;
 using Catalog.API.Entities;
-using Catalog.API.Exceptions;
+using Catalog.API.Errors;
+using FluentValidation;
 using Marten;
 using MediatR;
 
@@ -24,6 +25,28 @@ public static class UpdateProduct
         public string? ImageUrl { get; set; }
 
         public List<string> Category { get; set; } = [];
+    }
+    
+    public sealed class Validator : AbstractValidator<Command>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .WithMessage("Product ID is required.");
+            
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .WithMessage("Product name is required.");
+
+            RuleFor(x => x.Price)
+                .GreaterThan(0)
+                .WithMessage("Product price must be greater than 0.");
+
+            RuleFor(x => x.Category)
+                .NotEmpty()
+                .WithMessage("Product category is required.");
+        }
     }
     
     public class Handler(IDocumentSession session) : ICommandHandler<Command, Result<Guid>>
