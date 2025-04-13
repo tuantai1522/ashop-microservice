@@ -1,0 +1,12 @@
+services:
+  catalog.db:
+    container_name: catalog.db
+    image: postgres:latest
+    networks: ['catalog_network']
+
+networks:
+  catalog_network:
+
+volumes:
+  postgres_catalog:
+

@@ -1,4 +1,5 @@
 using BuildingBlocks.CQRS;
+using BuildingBlocks.Result;
 using Carter;
 using Catalog.API.Contracts;
 using Catalog.API.Entities;
@@ -10,13 +11,13 @@ namespace Catalog.API.Features;
 
 public static class GetProductsByCategory
 {
-    public record Query(string CategoryName, int? PageNumber = 1, int? PageSize = 10) : IQuery<IReadOnlyList<ProductDto>>;
+    public record Query(string CategoryName, int? PageNumber = 1, int? PageSize = 10) : IQuery<Result<IReadOnlyList<ProductDto>>>;
 
-    internal class Handler(IDocumentSession session) : IQueryHandler<Query, IReadOnlyList<ProductDto>>
+    internal class Handler(IDocumentSession session) : IQueryHandler<Query, Result<IReadOnlyList<ProductDto>>>
     {
         private readonly IDocumentSession _session = session;
 
-        public async Task<IReadOnlyList<ProductDto>> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<Result<IReadOnlyList<ProductDto>>> Handle(Query query, CancellationToken cancellationToken)
         {
             var products = await _session.Query<Product>()
                 .Where(x => x.Category.Contains(query.CategoryName))
@@ -36,7 +37,7 @@ public class GetProductsByCategoryEndpoint : ICarterModule
             {
                 var result = await sender.Send(request);
 
-                return Results.Ok(result);
+                return result.IsSuccess ? Results.Ok(result.Value)  : result.ToProblemDetails();
             })
             .WithName("GetProductsByCategory")
             .Produces<IReadOnlyList<ProductDto>>()

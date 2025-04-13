@@ -1,7 +1,9 @@
 using BuildingBlocks.CQRS;
+using BuildingBlocks.Result;
 using Carter;
 using Catalog.API.Contracts;
 using Catalog.API.Entities;
+using Catalog.API.Exceptions;
 using Marten;
 using MediatR;
 
@@ -9,7 +11,7 @@ namespace Catalog.API.Features;
 
 public static class UpdateProduct
 {
-    public class Command : ICommand<Guid>
+    public class Command : ICommand<Result<Guid>>
     {
         public Guid Id { get; set; }
         
@@ -24,18 +26,18 @@ public static class UpdateProduct
         public List<string> Category { get; set; } = [];
     }
     
-    public class Handler(IDocumentSession session) : ICommandHandler<Command, Guid>
+    public class Handler(IDocumentSession session) : ICommandHandler<Command, Result<Guid>>
     {
         private readonly IDocumentSession _session = session;
 
-        public async Task<Guid> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
             // To find the product by ID
             var product = await _session.LoadAsync<Product>(command.Id, cancellationToken);
             
             if (product is null)
             {
-                throw new BadHttpRequestException($"Product with {command.Id} not found");
+                return Result.Failure<Guid>(ProductErrors.NotFound(command.Id));
             }
 
             // Update product properties
@@ -70,9 +72,9 @@ public class UpdateProductEndpoint : ICarterModule
                     Category = request.Category,
                 };
 
-                var productId = await mediator.Send(command);
+                var result = await mediator.Send(command);
 
-                return Results.Ok(productId);
+                return result.IsSuccess ? Results.Ok(result.Value)  : result.ToProblemDetails();
             })
             .WithName("UpdateProduct")
             .Produces<Guid>()

@@ -1,0 +1,9 @@
+﻿services:
+  catalog.db:
+    image: postgres:latest
+    volumes:
+      - catalog-db-data:/var/lib/postgresql/data
+    networks: ['catalog_network']
+
+networks:
+  catalog_network:

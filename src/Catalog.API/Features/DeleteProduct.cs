@@ -1,6 +1,8 @@
 using BuildingBlocks.CQRS;
+using BuildingBlocks.Result;
 using Carter;
 using Catalog.API.Entities;
+using Catalog.API.Exceptions;
 using Marten;
 using MediatR;
 
@@ -8,23 +10,23 @@ namespace Catalog.API.Features;
 
 public static class DeleteProduct
 {
-    public record Command : ICommand<Guid>
+    public record Command : ICommand<Result<Guid>>
     {
         public Guid Id { get; set; }
     }
     
-    internal class Handler(IDocumentSession session) : ICommandHandler<Command, Guid>
+    internal class Handler(IDocumentSession session) : ICommandHandler<Command, Result<Guid>>
     {
         private readonly IDocumentSession _session = session;
 
-        public async Task<Guid> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
             // To find the product by ID
             var product = await _session.LoadAsync<Product>(command.Id, cancellationToken);
             
             if (product is null)
             {
-                throw new BadHttpRequestException($"Product with {command.Id} not found");
+                return Result.Failure<Guid>(ProductErrors.NotFound(command.Id));
             }
 
             _session.Delete(product);
@@ -47,9 +49,10 @@ public class DeleteProductEndpoint : ICarterModule
                     Id = id,
                 };
 
-                var productId = await mediator.Send(command);
+                var result = await mediator.Send(command);
 
-                return Results.Ok(productId);
+                return result.IsSuccess ? Results.Ok(result.Value)  : result.ToProblemDetails();
+
             })
             .WithName("DeleteProduct")
             .Produces<Guid>()

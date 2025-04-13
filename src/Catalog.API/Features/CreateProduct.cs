@@ -1,4 +1,5 @@
 using BuildingBlocks.CQRS;
+using BuildingBlocks.Result;
 using Carter;
 using Catalog.API.Contracts;
 using Catalog.API.Entities;
@@ -10,7 +11,7 @@ namespace Catalog.API.Features;
 
 public static class CreateProduct
 {
-    public record Command : ICommand<Guid>
+    public record Command : ICommand<Result<Guid>>
     {
         public string Name { get; set; } = null!;
         
@@ -23,11 +24,11 @@ public static class CreateProduct
         public List<string> Category { get; set; } = [];
     }
     
-    internal class Handler(IDocumentSession session) : ICommandHandler<Command, Guid>
+    internal class Handler(IDocumentSession session) : ICommandHandler<Command, Result<Guid>>
     {
         private readonly IDocumentSession _session = session;
 
-        public async Task<Guid> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
             var product = new Product
             {
@@ -55,9 +56,9 @@ public class CreateProductEndpoint : ICarterModule
             {
                 var command = request.Adapt<CreateProduct.Command>();
 
-                var productId = await mediator.Send(command);
+                var result = await mediator.Send(command);
 
-                return Results.Created($"/products/{productId}", productId);
+                return result.IsSuccess ? Results.Created($"/products/{result.Value}", result.Value)  : result.ToProblemDetails();
             })
             .WithName("CreateProduct")
             .Produces<Guid>(StatusCodes.Status201Created)

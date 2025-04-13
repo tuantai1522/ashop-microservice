@@ -1,3 +1,4 @@
+using BuildingBlocks.Result;
 using Carter;
 using Catalog.API.Data;
 using Marten;
@@ -20,18 +21,6 @@ builder.Services.AddMarten(opts =>
     var connectionString = builder.Configuration.GetConnectionString("Database")!;
     
     opts.Connection(connectionString);    
-    
-    // Auto create schema, indexes, and documents
-    opts.AutoCreateSchemaObjects = Weasel.Core.AutoCreate.All;
-    
-    // Auto create documents
-    opts.CreateDatabasesForTenants(c =>
-    {
-        c.MaintenanceDatabase(connectionString);
-        c.ForTenant()
-            .CheckAgainstPgDatabase()
-            .WithOwner("postgres");
-    });
     
 }).UseLightweightSessions();
 
@@ -56,6 +45,9 @@ if (app.Environment.IsDevelopment())
     });
 
 }
+
+// Global exception handling to catch all unhandled exceptions
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 app.MapCarter();
