@@ -1,13 +1,21 @@
 using BuildingBlocks.Behaviour;
 using BuildingBlocks.Validation;
 using Carter;
+using Catalog.API;
 using Catalog.API.Data;
 using FluentValidation;
 using Marten;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration
+        .ReadFrom.Configuration(context.Configuration);
+});
 
 builder.Services.AddSwaggerGen();
 
@@ -15,6 +23,9 @@ var assembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(assembly);
+    
+    config.AddOpenBehavior(typeof(RequestLoggingBehaviour<,>));
+
     config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
 });
 
@@ -52,8 +63,13 @@ if (app.Environment.IsDevelopment())
 
 }
 
+// Request logging middleware
+app.UseMiddleware<RequestLogContextMiddleware>();
+
 // Global exception handling to catch all unhandled exceptions
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 app.MapCarter();

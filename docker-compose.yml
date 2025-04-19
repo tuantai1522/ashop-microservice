@@ -3,7 +3,17 @@ services:
     container_name: catalog.db
     image: postgres:latest
     networks: ['catalog_network']
-
+    
+  catalog.seq:
+    container_name: catalog.seq
+    image: datalust/seq:latest
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+        - "5341:5341"
+        - "8081:80"
+    networks: ['catalog_network']
+          
 networks:
   catalog_network:
 
