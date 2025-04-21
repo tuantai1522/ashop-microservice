@@ -4,7 +4,9 @@ using Carter;
 using Catalog.API;
 using Catalog.API.Data;
 using FluentValidation;
+using HealthChecks.UI.Client;
 using Marten;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,6 +48,9 @@ if (builder.Environment.IsDevelopment())
     builder.Services.InitializeMartenWith<InitialCatalogData>();
 }
 
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("Database")!);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -62,6 +67,11 @@ if (app.Environment.IsDevelopment())
     });
 
 }
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 // Request logging middleware
 app.UseMiddleware<RequestLogContextMiddleware>();
