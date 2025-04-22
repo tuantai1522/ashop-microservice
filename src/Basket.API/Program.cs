@@ -1,11 +1,46 @@
+using BuildingBlocks.Behaviour;
+using BuildingBlocks.Validation;
+using Carter;
+using Catalog.API;
+using FluentValidation;
+using Marten;
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration
+        .ReadFrom.Configuration(context.Configuration);
+});
+
 builder.Services.AddSwaggerGen();
 
-
 var app = builder.Build();
+
+var assembly = typeof(Program).Assembly;
+builder.Services.AddMediatR(config =>
+{
+    config.RegisterServicesFromAssembly(assembly);
+    
+    config.AddOpenBehavior(typeof(RequestLoggingBehaviour<,>));
+
+    config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+});
+
+builder.Services.AddCarter();
+
+builder.Services.AddValidatorsFromAssemblies([assembly]);
+
+builder.Services.AddMarten(opts =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Database")!;
+    
+    opts.Connection(connectionString);    
+    
+}).UseLightweightSessions();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -21,6 +56,17 @@ if (app.Environment.IsDevelopment())
     });
 
 }
+
+// Request logging middleware
+app.UseMiddleware<RequestLogContextMiddleware>();
+
+// Global exception handling to catch all unhandled exceptions
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseSerilogRequestLogging();
+
+// Configure the HTTP request pipeline.
+app.MapCarter();
 
 app.Run();
 
