@@ -29,7 +29,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=tuantai0708
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certificates/aspnetapp.pfx
 
-      - ConnectionStrings__Database=Server=catalog.db;Port=5432;Database=CatalogDb;User Id=postgres;Password=123456;Include Error Detail=true
+      - ConnectionStrings__Database=Server=catalog.db;Port=5434;Database=CatalogDb;User Id=postgres;Password=123456;Include Error Detail=true
 
     depends_on:
       - catalog.db
@@ -40,5 +40,28 @@ services:
     volumes:
       - ./containers/usersecrets:/home/app/.microsoft/usersecrets:ro
       - ./containers/https:/home/app/.aspnet/https:ro
+
+  basket.db:
+    container_name: basket.db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=BasketDb
+    restart: always
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_basket:/var/lib/postgresql/data
+        
+  basket.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_URLS=http://+:8080;https://+:8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=tuantai0708
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certificates/aspnetapp.pfx
+
+      - ConnectionStrings__Database=Server=catalog.db;Port=5435;Database=BasketDb;User Id=postgres;Password=123456;Include Error Detail=true
   
 

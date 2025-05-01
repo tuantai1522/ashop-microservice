@@ -1,7 +1,7 @@
+using Basket.API.Data;
 using BuildingBlocks.Behaviour;
 using BuildingBlocks.Validation;
 using Carter;
-using Catalog.API;
 using FluentValidation;
 using Marten;
 using Serilog;
@@ -18,7 +18,6 @@ builder.Host.UseSerilog((context, configuration) =>
 
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
 
 var assembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(config =>
@@ -37,10 +36,14 @@ builder.Services.AddValidatorsFromAssemblies([assembly]);
 builder.Services.AddMarten(opts =>
 {
     var connectionString = builder.Configuration.GetConnectionString("Database")!;
-    
+
     opts.Connection(connectionString);    
     
 }).UseLightweightSessions();
+
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

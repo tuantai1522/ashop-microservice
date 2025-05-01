@@ -11,10 +11,21 @@ services:
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalog.api
     networks: ['catalog_network']
+    
+  basket.db:
+    container_name: basket.db
+    image: postgres:latest
+    networks: ['basket_network']
+
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basket.api
+    networks: ['basket_network']
           
 networks:
   catalog_network:
+  basket_network:
 
 volumes:
   postgres_catalog:
+  postgres_basket:
 

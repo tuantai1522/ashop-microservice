@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Http;
 using Serilog.Context;
 
-namespace Catalog.API;
+namespace BuildingBlocks.Validation;
 
 public class RequestLogContextMiddleware(RequestDelegate next)
 {
