@@ -52,6 +52,12 @@ services:
       - "5435:5432"
     volumes:
       - postgres_basket:/var/lib/postgresql/data
+      
+  basket.cache:
+    container_name: basket.cache
+    restart: always
+    ports:
+      - "6379:6379"
         
   basket.api:
     environment:
@@ -62,6 +68,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=tuantai0708
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certificates/aspnetapp.pfx
 
+      - ConnectionStrings__Redis=basket.cache:6379
       - ConnectionStrings__Database=Server=catalog.db;Port=5435;Database=BasketDb;User Id=postgres;Password=123456;Include Error Detail=true
   
 

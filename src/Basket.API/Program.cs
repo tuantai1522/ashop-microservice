@@ -4,6 +4,7 @@ using BuildingBlocks.Validation;
 using Carter;
 using FluentValidation;
 using Marten;
+using Microsoft.Extensions.Caching.Hybrid;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +43,25 @@ builder.Services.AddMarten(opts =>
 }).UseLightweightSessions();
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+// Add the caching decorator
+builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();
+
+// Add cache
+builder.Services.AddStackExchangeRedisCache(option =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Redis")!;
+
+    option.Configuration = connectionString;
+});
+        
+builder.Services.AddHybridCache(option =>
+{
+    option.DefaultEntryOptions = new HybridCacheEntryOptions()
+    {
+        LocalCacheExpiration = TimeSpan.FromHours(2), // Set local cache expiration to 2 hours
+        Expiration = TimeSpan.FromHours(1) // Set distributed cache expiration to 1 hour
+    };
+});
 
 var app = builder.Build();
 

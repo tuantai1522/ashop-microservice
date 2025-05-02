@@ -16,6 +16,11 @@ services:
     container_name: basket.db
     image: postgres:latest
     networks: ['basket_network']
+    
+  basket.cache:
+    container_name: basket.cache
+    image: redis:latest
+    networks: ['basket_network']
 
   basket.api:
     image: ${DOCKER_REGISTRY-}basket.api

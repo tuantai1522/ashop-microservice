@@ -11,6 +11,9 @@
         <PackageReference Include="Carter" Version="9.0.0" />
         <PackageReference Include="Marten" Version="7.39.6" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="9.4.0" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.2" />
+        <PackageReference Include="Scrutor" Version="6.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="8.1.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.1" />
