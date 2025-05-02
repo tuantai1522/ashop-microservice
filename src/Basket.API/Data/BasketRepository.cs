@@ -21,9 +21,8 @@ public class BasketRepository(IDocumentSession session) : IBasketRepository
 
     public async Task DeleteBasketById(Guid id, CancellationToken cancellationToken = default)
     {
-        _session.Delete(id);
-            
-        await _session.SaveChangesAsync(cancellationToken);
+        _session.Delete<ShoppingCart>(id);
         
+        await _session.SaveChangesAsync(cancellationToken);
     }
 }
