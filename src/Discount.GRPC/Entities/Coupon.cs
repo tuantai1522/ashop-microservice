@@ -15,7 +15,7 @@ public sealed class Coupon
     public string? Description { get; set; }
 
     /// <summary>
-    /// Amount which this coupon can be applied to the product
+    /// Rate which this coupon can be applied to the product
     /// </summary>
-    public double Amount { get; set; }
+    public double Rate { get; set; }
 }
