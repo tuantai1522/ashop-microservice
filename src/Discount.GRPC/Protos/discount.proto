@@ -20,7 +20,7 @@ message CouponModel {
   int32 id = 1;
   string productId = 2;
   string description = 3;
-  double Rate = 4;
+  double rate = 4;
 }
 
 // Request to get discount by product ID
@@ -45,7 +45,7 @@ message UpdateDiscountRequest {
 
 // Request to delete discount by coupon id
 message DeleteDiscountRequest {
-  string productName = 1;
+   int32 id = 1;
 }
 
 // Response for deleting discount
