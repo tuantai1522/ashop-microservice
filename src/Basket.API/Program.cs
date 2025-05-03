@@ -3,7 +3,9 @@ using BuildingBlocks.Behaviour;
 using BuildingBlocks.Validation;
 using Carter;
 using FluentValidation;
+using HealthChecks.UI.Client;
 using Marten;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Caching.Hybrid;
 using Serilog;
 
@@ -63,6 +65,10 @@ builder.Services.AddHybridCache(option =>
     };
 });
 
+builder.Services.AddHealthChecks()
+    .AddRedis(builder.Configuration.GetConnectionString("Redis")!)
+    .AddNpgSql(builder.Configuration.GetConnectionString("Database")!);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -79,6 +85,11 @@ if (app.Environment.IsDevelopment())
     });
 
 }
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 // Request logging middleware
 app.UseMiddleware<RequestLogContextMiddleware>();
