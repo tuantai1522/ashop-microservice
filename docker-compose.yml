@@ -25,12 +25,18 @@ services:
   basket.api:
     image: ${DOCKER_REGISTRY-}basket.api
     networks: ['basket_network']
+    
+  discount.grpc:
+      image: ${DOCKER_REGISTRY-}discount.grpc
+      networks: [ 'discount_network' ]
           
 networks:
   catalog_network:
   basket_network:
+  discount_network:
 
 volumes:
   postgres_catalog:
   postgres_basket:
+  postgres_discount:
 
