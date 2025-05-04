@@ -28,12 +28,12 @@ services:
     
   discount.grpc:
       image: ${DOCKER_REGISTRY-}discount.grpc
-      networks: [ 'discount_network' ]
+      networks: ['basket_network']
           
 networks:
   catalog_network:
   basket_network:
-  discount_network:
+    driver: bridge
 
 volumes:
   postgres_catalog:

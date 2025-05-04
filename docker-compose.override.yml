@@ -70,9 +70,12 @@ services:
 
       - ConnectionStrings__Redis=basket.cache:6379
       - ConnectionStrings__Database=Server=basket.db;Port=5432;Database=BasketDb;User Id=postgres;Password=123456;Include Error Detail=true
+      - GrpcSettings__DiscountUrl=https://discount.grpc:8081
+
     depends_on:
       - basket.db
       - basket.cache
+      - discount.grpc
     ports:
       - "5001:8080"
       - "5101:8081"
@@ -85,7 +88,6 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ASPNETCORE_URLS=http://+:8080;https://+:8081
       - ASPNETCORE_Kestrel__Certificates__Default__Password=tuantai0708
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certificates/aspnetapp.pfx
       

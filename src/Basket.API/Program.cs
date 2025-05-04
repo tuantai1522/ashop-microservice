@@ -75,8 +75,18 @@ builder.Services.AddHealthChecks()
 builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
 {
     options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]!);
+})
+// To configure to bypass SSL certificate validation
+.ConfigurePrimaryHttpMessageHandler(() =>
+{
+    var handler = new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    };
+
+    return handler;
 });
-    
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
