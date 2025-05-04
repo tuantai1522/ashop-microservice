@@ -4,6 +4,7 @@ using Basket.API.Entities;
 using BuildingBlocks.CQRS;
 using BuildingBlocks.Validation;
 using Carter;
+using Discount.GRPC;
 using FluentValidation;
 using Mapster;
 using MediatR;
@@ -34,21 +35,53 @@ public static class StoreBasket
         }
     }
     
-    internal class Handler(IBasketRepository basketRepository) : ICommandHandler<Command, Result<Guid>>
+    internal class Handler(IBasketRepository basketRepository, DiscountProtoService.DiscountProtoServiceClient discountProtoService) : ICommandHandler<Command, Result<Guid>>
     {
         private readonly IBasketRepository _basketRepository = basketRepository;
+        private readonly DiscountProtoService.DiscountProtoServiceClient _discountProtoService = discountProtoService;
 
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
+            var updatedItems = GetDiscount(command.Items, cancellationToken);
+            
             var shoppingCart = new ShoppingCart()
             {
                 UserName = command.UserName,
-                Items = command.Items.Adapt<List<ShoppingCartItem>>()
+                Items = updatedItems.Adapt<List<ShoppingCartItem>>()
             };
 
             await _basketRepository.StoreBasket(shoppingCart, cancellationToken);
             
             return shoppingCart.Id;
+        }
+        
+        /// <summary>
+        /// To fetch discount from Discount service for each item
+        /// </summary>
+        /// <param name="shoppingCartItems">
+        /// Request from client
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Cancellation token to cancel the request
+        /// </param>
+        /// <returns></returns>
+        private List<ShoppingCartItemDto> GetDiscount(IReadOnlyList<ShoppingCartItemDto> shoppingCartItems, CancellationToken cancellationToken)
+        {
+            return shoppingCartItems.Select(item =>
+            {
+                var response = _discountProtoService.GetDiscountByProductId(new GetDiscountByProductIdRequest
+                {
+                    ProductId = item.ProductId.ToString()
+                }, cancellationToken: cancellationToken);
+
+                var totalRate = response.Coupons.Sum(x => x.Rate);
+
+                var newPrice = item.Price - item.Price * (decimal)totalRate;
+
+                var updatedItem = item with { Price = newPrice };
+                
+                return updatedItem;
+            }).ToList();
         }
     }
 }

@@ -2,6 +2,7 @@ using Basket.API.Data;
 using BuildingBlocks.Behaviour;
 using BuildingBlocks.Validation;
 using Carter;
+using Discount.GRPC;
 using FluentValidation;
 using HealthChecks.UI.Client;
 using Marten;
@@ -69,6 +70,13 @@ builder.Services.AddHealthChecks()
     .AddRedis(builder.Configuration.GetConnectionString("Redis")!)
     .AddNpgSql(builder.Configuration.GetConnectionString("Database")!);
 
+
+//Grpc Services
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
+{
+    options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]!);
+});
+    
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

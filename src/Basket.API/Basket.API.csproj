@@ -12,8 +12,9 @@
         <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
         <PackageReference Include="Carter" Version="9.0.0" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
         <PackageReference Include="Marten" Version="7.39.6" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
         <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="9.4.0" />
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.2" />
         <PackageReference Include="Scrutor" Version="6.0.1" />
@@ -30,6 +31,12 @@
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Protobuf Include="..\Discount.GRPC\Protos\discount.proto" GrpcServices="Client">
+        <Link>Protos\discount.proto</Link>
+      </Protobuf>
     </ItemGroup>
 
 </Project>
