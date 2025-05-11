@@ -1,0 +1,28 @@
+using MediatR;
+
+namespace Ordering.Core.Abstraction;
+
+/// <summary>
+/// Type entity is base class for all entities.
+/// </summary>
+public abstract class Entity : IAuditableEntity
+{
+    public DateTime CreatedAt { get; init; }
+    
+    public string? CreatedBy { get; set; }
+    
+    public DateTime? LastModified { get; set; }
+    
+    public string? LastModifiedBy { get; set; }
+    
+    /// <summary>
+    /// Active is status of this item
+    /// </summary>
+    public bool Active { get; private set; } = true;
+    
+    private readonly List<IDomainEvent> _domainEvents = [];
+    
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents;
+    
+    protected void RaiseDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+}
