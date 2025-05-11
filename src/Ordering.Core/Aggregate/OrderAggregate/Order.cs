@@ -26,7 +26,7 @@ public class Order : Entity, IAggregateRoot
     /// <summary>
     /// Status of the order
     /// </summary>
-    public OrderStatus Status { get; private set; } = OrderStatus.Draft;
+    public OrderStatus Status { get; private set; } = OrderStatus.Pending;
     
     public CustomerId CustomerId { get; private set; }
     
@@ -44,13 +44,13 @@ public class Order : Entity, IAggregateRoot
         
     }
     
-    public static Order Create(OrderId id, CustomerId customerId, string orderName, Address shippingAddress, Payment payment)
+    public static Order Create(OrderId id, CustomerId customerId, Address shippingAddress, Payment payment)
     {
         var order = new Order
         {
             Id = id,
             CustomerId = customerId,
-            OrderName = orderName,
+            OrderName = Guid.CreateVersion7().ToString(),
             ShippingAddress = shippingAddress,
             Payment = payment,
             Status = OrderStatus.Pending
@@ -61,9 +61,8 @@ public class Order : Entity, IAggregateRoot
         return order;
     }
     
-    public void Update(string orderName, Address shippingAddress, Address billingAddress, Payment payment, OrderStatus status)
+    public void Update(Address shippingAddress, Payment payment, OrderStatus status)
     {
-        OrderName = orderName;
         ShippingAddress = shippingAddress;
         Payment = payment;
         Status = status;
