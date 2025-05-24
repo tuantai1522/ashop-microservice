@@ -44,11 +44,10 @@ public class Order : Entity, IAggregateRoot
         
     }
     
-    public static Order Create(OrderId id, CustomerId customerId, Address shippingAddress, Payment payment)
+    public static Order Create(CustomerId customerId, Address shippingAddress, Payment payment)
     {
         var order = new Order
         {
-            Id = id,
             CustomerId = customerId,
             OrderName = Guid.CreateVersion7().ToString(),
             ShippingAddress = shippingAddress,

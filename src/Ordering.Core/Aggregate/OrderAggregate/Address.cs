@@ -16,7 +16,7 @@ public record Address
     {
     }
 
-    public static Address Create(string street, string city, string state, string country, string zipCode)
+    public static Address Create(string street, string city, string? state, string country, string? zipCode)
     {
         return new Address()
         {

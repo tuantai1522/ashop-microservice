@@ -11,7 +11,7 @@ public record Payment
     {
     }
 
-    private Payment(string cardName, string cardNumber, string expiration, string cvv)
+    private Payment(string cardName, string cardNumber, string? expiration, string cvv)
     {
         CardName = cardName;
         CardNumber = cardNumber;
@@ -19,7 +19,7 @@ public record Payment
         CVV = cvv;
     }
 
-    public static Payment Create(string cardName, string cardNumber, string expiration, string cvv)
+    public static Payment Create(string cardName, string cardNumber, string? expiration, string cvv)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(cardName);
         ArgumentException.ThrowIfNullOrWhiteSpace(cardNumber);

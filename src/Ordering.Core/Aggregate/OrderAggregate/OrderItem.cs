@@ -1,9 +1,10 @@
+using Ordering.Core.Abstraction;
 using Ordering.Core.Aggregate.ProductAggregate;
 using Ordering.Core.Exception;
 
 namespace Ordering.Core.Aggregate.OrderAggregate;
 
-public class OrderItem
+public class OrderItem : Entity
 {
     public OrderItemId Id { get; private set; } = OrderItemId.CreateNew();
 

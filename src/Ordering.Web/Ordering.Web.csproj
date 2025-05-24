@@ -12,11 +12,14 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="8.1.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Ordering.Infrastructure\Ordering.Infrastructure.csproj" />
+      <ProjectReference Include="..\Ordering.UseCases\Ordering.UseCases.csproj" />
     </ItemGroup>
 
 </Project>

@@ -7,11 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\BuildingBlocks\BuildingBlocks.csproj" />
+      <ProjectReference Include="..\Ordering.Core\Ordering.Core.csproj" />
     </ItemGroup>
 
 </Project>

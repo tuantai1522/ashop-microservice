@@ -9,6 +9,9 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
     public void Configure(EntityTypeBuilder<Product> builder)
     {
         builder.ToTable("Products");
+        
+        builder.Property(o => o.Price)
+            .HasPrecision(18, 4);
 
         // To configure Strongly typed IDs
         builder.Property(o => o.Id).HasConversion(

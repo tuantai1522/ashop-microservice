@@ -7,7 +7,7 @@ namespace Ordering.Core.Abstraction;
 /// </summary>
 public abstract class Entity : IAuditableEntity
 {
-    public DateTime CreatedAt { get; init; }
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     
     public string? CreatedBy { get; set; }
     

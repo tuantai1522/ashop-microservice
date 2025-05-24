@@ -1,6 +1,9 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Ordering.Core.Aggregate.OrderAggregate;
+using Ordering.Infrastructure.Repositories;
 
 namespace Ordering.Infrastructure;
 
@@ -14,6 +17,8 @@ public static class DependencyInjection
         {
             options.UseSqlServer(connectionString);
         });
+        
+        services.AddScoped<IOrderRepository, OrderRepository>();
         
         return services;
     }
