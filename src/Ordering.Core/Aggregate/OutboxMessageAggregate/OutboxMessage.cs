@@ -2,7 +2,7 @@ using Ordering.Core.Abstraction;
 
 namespace Ordering.Core.Aggregate.OutboxMessageAggregate;
 
-public class OutboxMessage : Entity
+public class OutboxMessage : Entity, IAggregateRoot
 {
     public OutboxMessageId Id { get; init; } = OutboxMessageId.CreateNew();
     

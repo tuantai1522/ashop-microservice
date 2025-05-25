@@ -36,7 +36,10 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor
             .Select(domainEvent => new OutboxMessage
                 {
                     Type = domainEvent.GetType().Name,
-                    Content = JsonConvert.SerializeObject(domainEvent),
+                    Content = JsonConvert.SerializeObject(domainEvent, new JsonSerializerSettings 
+                    {
+                        TypeNameHandling = TypeNameHandling.All
+                    }),
                 })
             .ToList();
         

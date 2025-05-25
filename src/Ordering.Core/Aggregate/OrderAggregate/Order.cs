@@ -39,7 +39,7 @@ public class Order : Entity, IAggregateRoot
         
     public IReadOnlyList<OrderItem> OrderItems => _orderItems.AsReadOnly();
 
-    public decimal GetTotalPrice => OrderItems.Sum(x => x.Price * x.Quantity);
+    public decimal GetTotalPrice() => OrderItems.Sum(x => x.Price * x.Quantity);
 
     private Order()
     {
