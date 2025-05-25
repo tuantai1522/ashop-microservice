@@ -22,11 +22,16 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         
         builder.Property(p => p.OrderName).HasMaxLength(100).IsRequired();
         
-        // One ticket has multiple ticket line items
+        // One order has multiple order items
         builder.HasMany(r => r.OrderItems)
             .WithOne()
             .HasForeignKey(p => p.OrderId);
         
+        // One order belongs to one customer
+        builder.HasOne(r => r.Customer)
+            .WithMany()
+            .HasForeignKey(p => p.CustomerId);
+
         // Configure shipping address value object
         builder.OwnsOne(property => property.ShippingAddress, address =>
         {

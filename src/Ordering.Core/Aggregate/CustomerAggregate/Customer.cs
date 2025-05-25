@@ -5,7 +5,7 @@ namespace Ordering.Core.Aggregate.CustomerAggregate;
 public class Customer : Entity, IAggregateRoot
 {
     public CustomerId Id { get; init; } = CustomerId.CreateNew();
-    
+
     public string Name { get; private set; } = null!;
     
     public string Email { get; private set; } = null!;

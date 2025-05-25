@@ -28,7 +28,9 @@ public class Order : Entity, IAggregateRoot
     /// </summary>
     public OrderStatus Status { get; private set; } = OrderStatus.Pending;
     
-    public CustomerId CustomerId { get; private set; }
+    public CustomerId CustomerId { get; init; }
+    
+    public Customer Customer { get; } = null!;
     
     /// <summary>
     /// List order items
@@ -55,7 +57,7 @@ public class Order : Entity, IAggregateRoot
             Status = OrderStatus.Pending
         };
 
-        order.RaiseDomainEvent(new OrderCreatedEvent(order));
+        order.RaiseDomainEvent(new OrderCreatedEvent(order.Id));
 
         return order;
     }

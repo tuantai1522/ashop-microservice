@@ -22,7 +22,9 @@ public abstract class Entity : IAuditableEntity
     
     private readonly List<IDomainEvent> _domainEvents = [];
     
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents;
+    public IReadOnlyList<IDomainEvent> GetDomainEvents() => _domainEvents.ToList();
     
     protected void RaiseDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+    
+    public void ClearDomainEvents() => _domainEvents.Clear();
 }

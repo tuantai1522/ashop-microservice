@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Ordering.Core.Abstraction;
 using Ordering.Core.Aggregate.CustomerAggregate;
 using Ordering.Core.Aggregate.OrderAggregate;
+using Ordering.Core.Aggregate.OutboxMessageAggregate;
 using Ordering.Core.Aggregate.ProductAggregate;
 
 namespace Ordering.Infrastructure;
@@ -19,6 +20,8 @@ public class OrderingContext(DbContextOptions<OrderingContext> options) : DbCont
     public DbSet<Customer> Customers { get; set; }
 
     public DbSet<Product> Products { get; set; }
+    
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
